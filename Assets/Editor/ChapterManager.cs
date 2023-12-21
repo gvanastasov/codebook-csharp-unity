@@ -56,7 +56,7 @@ public class ChapterManager : EditorWindow
     {
         Handles.BeginGUI();
 
-        GUILayout.BeginArea(new Rect(Screen.width - 210, Screen.height - 160, 200, 160));
+        GUILayout.BeginArea(new Rect(Screen.width - 210, Screen.height - 200, 200, 200));
         GUILayout.BeginVertical("box");
 
         GUILayout.Label("Chapter Manager");
@@ -74,6 +74,7 @@ public class ChapterManager : EditorWindow
             }
 
             var newChapter = new GameObject($"chapter_00 - {newChapterName}");
+            Undo.RegisterCreatedObjectUndo(newChapter, "Create Chapter");
             InsertChapter(parent, newChapter, isChapterSelected);
 
             newChapterName = NEW_CHAPTER_NAME;
@@ -81,11 +82,6 @@ public class ChapterManager : EditorWindow
         newChapterName = GUILayout.TextField(newChapterName, 80);
 
         GUI.enabled = isChapterSelected;
-        if (GUILayout.Button("Create Part"))
-        {
-            // Call your method for creating a new part here
-        }
-
         if (GUILayout.Button("Remove Chapter"))
         {
             var parent = GameObject.Find("chapters").transform;
@@ -94,11 +90,22 @@ public class ChapterManager : EditorWindow
                 Debug.LogError("Could not find chapters parent object.");
                 return;
             }
-            selectedObject.transform.SetParent(null);
-            DestroyImmediate(selectedObject);
+            Undo.DestroyObjectImmediate(selectedObject);
             ReindexChapters(parent);
         }
+
+        DrawUILine(Color.gray, 1, 10);
+
+        if (GUILayout.Button("Create Part"))
+        {
+            // Call your method for creating a new part here
+        }
         GUI.enabled = true;
+
+        if (GUILayout.Button("Remove Part"))
+        {
+            // Call your method for creating a new part here
+        }
 
         if (GUI.Button(new Rect(177, 3, 12, 12), "", "WinBtnClose"))
         {
@@ -186,4 +193,22 @@ public class ChapterManager : EditorWindow
 
         child.name = string.Join("-", nameParts);
     }
+
+#region Helpers
+    /// <summary>
+    /// Draws a line in the GUI.
+    /// </summary>
+    /// <param name="color"></param>
+    /// <param name="thickness"></param>
+    /// <param name="padding"></param>
+    public static void DrawUILine(Color color, int thickness = 2, int padding = 10)
+    {
+        Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding+thickness));
+        r.height = thickness;
+        r.y+=padding/2;
+        r.x-=2;
+        r.width +=6;
+        EditorGUI.DrawRect(r, color);
+    }
+#endregion
 }
