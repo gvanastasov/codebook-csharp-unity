@@ -64,6 +64,7 @@ public class ChapterManager : EditorWindow
 
         GameObject selectedObject = Selection.activeGameObject;
         bool isChapterSelected = selectedObject != null && selectedObject.name.StartsWith("chapter_");
+        bool isPartSelected = selectedObject != null && selectedObject.name.StartsWith("part_");
 
         if (GUILayout.Button("Create Chapter"))
         {
@@ -74,23 +75,24 @@ public class ChapterManager : EditorWindow
         GUI.enabled = isChapterSelected;
         if (GUILayout.Button("Remove Chapter"))
         {
-            RemoveChapter(selectedObject);
+            DeleteChapter(selectedObject);
         }
 
         DrawUILine(Color.gray, 1, 10);
-
+        
+        GUI.enabled = isChapterSelected || isPartSelected;
         if (GUILayout.Button("Create Part"))
         {
-            var newPart = new GameObject($"part_00 - {newPartName}");
-            Undo.RegisterCreatedObjectUndo(newPart, "Create Part");
-            newPart.transform.SetParent(selectedObject.transform);
+            var parent = isChapterSelected ? selectedObject : selectedObject.transform.parent.gameObject;
+            CreatePart(parent);
         }
-        GUI.enabled = true;
 
+        GUI.enabled = isPartSelected;
         if (GUILayout.Button("Remove Part"))
         {
-            // Call your method for creating a new part here
+            DeletePart(selectedObject);
         }
+        GUI.enabled = true;
 
         if (GUI.Button(new Rect(177, 3, 12, 12), "", "WinBtnClose"))
         {
@@ -104,10 +106,40 @@ public class ChapterManager : EditorWindow
     }
 
     /// <summary>
+    /// Creates a new part in the selected chapter.
+    /// </summary>
+    /// <param name="selectedChapter"></param>
+    private static void CreatePart(GameObject selectedChapter)
+    {
+        var newPart = new GameObject($"part_00 - {newPartName}");
+        Undo.RegisterCreatedObjectUndo(newPart, "Create Part");
+
+        // todo: for now always at the end.
+        newPart.transform.SetParent(selectedChapter.transform);
+        Reindex(selectedChapter.transform, "part");
+    }
+
+    /// <summary>
+    /// Removes the selected part from the parent object.
+    /// </summary>
+    /// <param name="selectedPart"></param>
+    private static void DeletePart(GameObject selectedPart)
+    {
+        var parent = selectedPart.transform.parent;
+        if (parent == null)
+        {
+            Debug.LogError("Could not find part chapter parent.");
+            return;
+        }
+        Undo.DestroyObjectImmediate(selectedPart);
+        Reindex(parent, "part");
+    }
+
+    /// <summary>
     /// Removes the selected chapter from the parent object.
     /// </summary>
     /// <param name="selectedObject"></param>
-    private static void RemoveChapter(GameObject selectedObject)
+    private static void DeleteChapter(GameObject selectedObject)
     {
         var parent = GameObject.Find("chapters").transform;
         if (parent == null)
@@ -116,7 +148,7 @@ public class ChapterManager : EditorWindow
             return;
         }
         Undo.DestroyObjectImmediate(selectedObject);
-        ReindexChapters(parent);
+        Reindex(parent);
     }
 
     /// <summary>
@@ -140,34 +172,35 @@ public class ChapterManager : EditorWindow
             : parent.childCount;
 
         parent.InsertChild(newChapter.transform, idx);
+        Reindex(parent);
 
         newChapterName = NEW_CHAPTER_NAME;
     }
 
     /// <summary>
-    /// Re-indexes the chapters in the parent object.
+    /// Re-indexes children name prefix in the parent object.
     /// </summary>
     /// <param name="parent"></param>
-    private static void ReindexChapters(Transform parent)
+    private static void Reindex(Transform parent, string type = "chapter")
     {
         for (int i = 0; i < parent.childCount; i++)
         {
             var child = parent.GetChild(i);
-            SetChapterNameByIdx(i, child);
+            SetNameByIdx(i, child, type);
         }
     }
 
     /// <summary>
-    /// Sets the name of the chapter based on its index in the parent.
+    /// Sets the name of the game object based on its index in the parent, given format: "{prefix}_00 - {name}".
     /// </summary>
     /// <param name="idx"></param>
     /// <param name="child"></param>
-    private static void SetChapterNameByIdx(int idx, Transform child)
+    private static void SetNameByIdx(int idx, Transform child, string prefix = "chapter")
     {
         var nameParts = child.name.Split('-');
 
         var formattedIndex = idx < 9 ? "0" + (idx + 1).ToString() : (idx + 1).ToString();
-        nameParts[0] = "chapter_" + formattedIndex;
+        nameParts[0] = prefix + "_" + formattedIndex;
 
         child.name = string.Join("-", nameParts);
     }
