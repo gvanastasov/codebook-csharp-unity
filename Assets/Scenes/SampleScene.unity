@@ -2355,7 +2355,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1221827189}
   m_Layer: 0
-  m_Name: chapter_01- Unity C#
+  m_Name: chapter_01 - Unity C#
   m_TagString: Chapter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4305,6 +4305,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChapterDropdown: {fileID: 304285203}
   PartDropdown: {fileID: 1166774603}
+  BackButton: {fileID: 956976871}
+  NextButton: {fileID: 1792490631}
 --- !u!1 &2052517452
 GameObject:
   m_ObjectHideFlags: 0
