@@ -8,6 +8,9 @@ using UnityEngine;
 /// </summary>
 public class ChapterManager : EditorWindow
 {
+    private const string NEW_CHAPTER_NAME = "New Chapter";
+    private static string newChapterName = "New Chapter";
+
     /// <summary>
     /// Called when the scripts are reloaded, to ensure the tool is enabled or disabled as appropriate.
     /// </summary>
@@ -52,7 +55,7 @@ public class ChapterManager : EditorWindow
     {
         Handles.BeginGUI();
 
-        GUILayout.BeginArea(new Rect(Screen.width - 210, Screen.height - 140, 200, 140));
+        GUILayout.BeginArea(new Rect(Screen.width - 210, Screen.height - 160, 200, 160));
         GUILayout.BeginVertical("box");
 
         GUILayout.Label("Chapter Manager");
@@ -69,9 +72,12 @@ public class ChapterManager : EditorWindow
                 return;
             }
 
-            var newChapter = new GameObject("chapter_00 - New Chapter");
+            var newChapter = new GameObject($"chapter_00 - {newChapterName}");
             InsertChapter(parent, newChapter, isChapterSelected);
+
+            newChapterName = NEW_CHAPTER_NAME;
         }
+        newChapterName = GUILayout.TextField(newChapterName, 80);
 
         GUI.enabled = isChapterSelected;
         if (GUILayout.Button("Create Part"))
