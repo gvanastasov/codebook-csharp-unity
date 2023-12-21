@@ -11,6 +11,7 @@ public class ChapterManager : EditorWindow
 {
     private const string NEW_CHAPTER_NAME = "New Chapter";
     private static string newChapterName = "New Chapter";
+    private static string newPartName = "New Part";
 
     /// <summary>
     /// Called when the scripts are reloaded, to ensure the tool is enabled or disabled as appropriate.
@@ -66,18 +67,7 @@ public class ChapterManager : EditorWindow
 
         if (GUILayout.Button("Create Chapter"))
         {
-            var parent = GameObject.Find("chapters").transform;
-            if (parent == null)
-            {
-                Debug.LogError("Could not find chapters parent object.");
-                return;
-            }
-
-            var newChapter = new GameObject($"chapter_00 - {newChapterName}");
-            Undo.RegisterCreatedObjectUndo(newChapter, "Create Chapter");
-            InsertChapter(parent, newChapter, isChapterSelected);
-
-            newChapterName = NEW_CHAPTER_NAME;
+            CreateChapter(isChapterSelected);
         }
         newChapterName = GUILayout.TextField(newChapterName, 80);
 
@@ -98,7 +88,9 @@ public class ChapterManager : EditorWindow
 
         if (GUILayout.Button("Create Part"))
         {
-            // Call your method for creating a new part here
+            var newPart = new GameObject($"part_00 - {newPartName}");
+            Undo.RegisterCreatedObjectUndo(newPart, "Create Part");
+            newPart.transform.SetParent(selectedObject.transform);
         }
         GUI.enabled = true;
 
@@ -119,6 +111,31 @@ public class ChapterManager : EditorWindow
     }
 
     /// <summary>
+    /// Creates a new chapter in the parent object.
+    /// </summary>
+    /// <param name="isChapterSelected"></param>
+    private static void CreateChapter(bool isChapterSelected)
+    {
+        var parent = GameObject.Find("chapters").transform;
+        if (parent == null)
+        {
+            Debug.LogError("Could not find chapters parent object.");
+            return;
+        }
+
+        var newChapter = new GameObject($"chapter_00 - {newChapterName}");
+        Undo.RegisterCreatedObjectUndo(newChapter, "Create Chapter");
+
+        var idx = isChapterSelected
+            ? Selection.activeTransform.GetSiblingIndex() + 1
+            : parent.childCount;
+
+        parent.InsertChild(newChapter.transform, idx);
+
+        newChapterName = NEW_CHAPTER_NAME;
+    }
+
+    /// <summary>
     /// Re-indexes the chapters in the parent object.
     /// </summary>
     /// <param name="parent"></param>
@@ -127,54 +144,6 @@ public class ChapterManager : EditorWindow
         for (int i = 0; i < parent.childCount; i++)
         {
             var child = parent.GetChild(i);
-            SetChapterNameByIdx(i, child);
-        }
-    }
-
-    /// <summary>
-    /// Inserts a new chapter into the parent object, either at the end or after the currently selected chapter.
-    /// </summary>
-    /// <param name="parent"></param>
-    /// <param name="newChapter"></param>
-    /// <param name="createAfterCurrent"></param>
-    private static void InsertChapter(Transform parent, GameObject newChapter, bool createAfterCurrent)
-    {
-        // get index
-        var desiredIndex = createAfterCurrent 
-            ? Selection.activeTransform.GetSiblingIndex() + 1 
-            : parent.childCount;
-
-        // cache
-        var children = new List<Transform>();
-        for (int i = 0; i < parent.childCount; i++)
-        {
-            var child = parent.GetChild(i);
-            children.Add(child);
-        }
-
-        // unparent
-        foreach (var child in children)
-        {
-            child.SetParent(null);
-        }
-
-        // insert new chapter
-        if (desiredIndex >= children.Count)
-        {
-            children.Add(newChapter.transform);
-        }
-        else
-        {
-            children.Insert(desiredIndex, newChapter.transform);
-        }
-
-        // re-parent
-        for (int i = 0; i < children.Count; i++)
-        {
-            var child = children[i];
-            child.SetParent(parent);
-            child.SetSiblingIndex(i);
-
             SetChapterNameByIdx(i, child);
         }
     }
