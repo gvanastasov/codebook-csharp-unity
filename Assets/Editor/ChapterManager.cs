@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -87,7 +88,15 @@ public class ChapterManager : EditorWindow
 
         if (GUILayout.Button("Remove Chapter"))
         {
-            // Call your method for removing the selected chapter here
+            var parent = GameObject.Find("chapters").transform;
+            if (parent == null)
+            {
+                Debug.LogError("Could not find chapters parent object.");
+                return;
+            }
+            selectedObject.transform.SetParent(null);
+            DestroyImmediate(selectedObject);
+            ReindexChapters(parent);
         }
         GUI.enabled = true;
 
@@ -103,6 +112,19 @@ public class ChapterManager : EditorWindow
     }
 
     /// <summary>
+    /// Re-indexes the chapters in the parent object.
+    /// </summary>
+    /// <param name="parent"></param>
+    private static void ReindexChapters(Transform parent)
+    {
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            var child = parent.GetChild(i);
+            SetChapterNameByIdx(i, child);
+        }
+    }
+
+    /// <summary>
     /// Inserts a new chapter into the parent object, either at the end or after the currently selected chapter.
     /// </summary>
     /// <param name="parent"></param>
@@ -110,42 +132,58 @@ public class ChapterManager : EditorWindow
     /// <param name="createAfterCurrent"></param>
     private static void InsertChapter(Transform parent, GameObject newChapter, bool createAfterCurrent)
     {
+        // get index
         var desiredIndex = createAfterCurrent 
             ? Selection.activeTransform.GetSiblingIndex() + 1 
             : parent.childCount;
 
-        var allChildren = new List<Transform>();
+        // cache
+        var children = new List<Transform>();
         for (int i = 0; i < parent.childCount; i++)
         {
             var child = parent.GetChild(i);
-            allChildren.Add(child);
+            children.Add(child);
         }
 
-        foreach (var child in allChildren)
+        // unparent
+        foreach (var child in children)
         {
             child.SetParent(null);
         }
 
-        if (desiredIndex >= allChildren.Count)
+        // insert new chapter
+        if (desiredIndex >= children.Count)
         {
-            allChildren.Add(newChapter.transform);
+            children.Add(newChapter.transform);
         }
         else
         {
-            allChildren.Insert(desiredIndex, newChapter.transform);
+            children.Insert(desiredIndex, newChapter.transform);
         }
 
-        for (int i = 0; i < allChildren.Count; i++)
+        // re-parent
+        for (int i = 0; i < children.Count; i++)
         {
-            allChildren[i].SetParent(parent);
-            allChildren[i].SetSiblingIndex(i);
+            var child = children[i];
+            child.SetParent(parent);
+            child.SetSiblingIndex(i);
 
-            string[] nameParts = allChildren[i].name.Split('-');
-
-            string formattedIndex = i < 9 ? "0" + (i + 1).ToString() : (i + 1).ToString();
-            nameParts[0] = "chapter_" + formattedIndex;
-
-            allChildren[i].name = string.Join("-", nameParts);
+            SetChapterNameByIdx(i, child);
         }
+    }
+
+    /// <summary>
+    /// Sets the name of the chapter based on its index in the parent.
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <param name="child"></param>
+    private static void SetChapterNameByIdx(int idx, Transform child)
+    {
+        var nameParts = child.name.Split('-');
+
+        var formattedIndex = idx < 9 ? "0" + (idx + 1).ToString() : (idx + 1).ToString();
+        nameParts[0] = "chapter_" + formattedIndex;
+
+        child.name = string.Join("-", nameParts);
     }
 }
