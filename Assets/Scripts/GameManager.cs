@@ -85,6 +85,28 @@ public class GameManager : MonoBehaviour
         chapter.transform.GetChild(partIndex).gameObject.SetActive(true);
     }
 
+    public void Chapter_Next()
+    {
+        int idx = GUIManager.Instance.ChapterDropdown.value + 1;
+        if (idx >= GUIManager.Instance.ChapterDropdown.options.Count)
+        {
+            idx = 0;
+        }
+        GUIManager.Instance.ChapterDropdown.value = idx;
+        OnChapterDropdown_Changed(idx);
+    }
+
+    public void Chapter_Previous()
+    {
+        int idx = GUIManager.Instance.ChapterDropdown.value - 1;
+        if (idx < 0)
+        {
+            idx = GUIManager.Instance.ChapterDropdown.options.Count - 1;
+        }
+        GUIManager.Instance.ChapterDropdown.value = idx;
+        OnChapterDropdown_Changed(idx);
+    }
+
 #region Helpers
     public List<GameObject> FindChapters()
     {

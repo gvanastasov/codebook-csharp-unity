@@ -12,6 +12,10 @@ public class GUIManager : MonoBehaviour
     public TMP_Dropdown ChapterDropdown;
 
     public TMP_Dropdown PartDropdown;
+
+    public GameObject BackButton;
+
+    public GameObject NextButton;
 #endregion
 
 #region Public Properties
@@ -36,29 +40,92 @@ public class GUIManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        this.ChapterDropdown.onValueChanged.AddListener(delegate { OnActive_Changed(); });
+        this.PartDropdown.onValueChanged.AddListener(delegate { OnActive_Changed(); });
+    }
+
     public void SetChapterOptions(List<string> options)
     {
-        ChapterDropdown.ClearOptions();
-        ChapterDropdown.AddOptions(options);
-        ChapterDropdown.RefreshShownValue();
+        this.ChapterDropdown.ClearOptions();
+        this.ChapterDropdown.AddOptions(options);
+        this.ChapterDropdown.RefreshShownValue();
+
+        Navigation_Update();
     }
 
     public void SetPartOptions(List<string> options)
     {
-        PartDropdown.ClearOptions();
-        PartDropdown.AddOptions(options);
+        this.PartDropdown.ClearOptions();
+        this.PartDropdown.AddOptions(options);
 
         if (options.Count == 0)
         {
-            PartDropdown.interactable = false;
+            this.PartDropdown.interactable = false;
             Debug.LogWarning("No parts found for this chapter.");
         }
         else
         {
-            PartDropdown.interactable = true;
+            this.PartDropdown.interactable = true;
         }
 
-        PartDropdown.RefreshShownValue();
-        PartDropdown.value = 0;
+        this.PartDropdown.RefreshShownValue();
+        this.PartDropdown.value = 0;
+
+        Navigation_Update();
+    }
+
+    public void SetNextPart()
+    {
+        if (this.PartDropdown.value < this.PartDropdown.options.Count - 1)
+        {
+            this.PartDropdown.value++;
+            this.PartDropdown.RefreshShownValue();
+        }
+        else
+        {
+            GameManager.Instance.Chapter_Next();
+        }
+    }
+
+    public void SetPreviousPart()
+    {
+        if (this.PartDropdown.value > 0)
+        {
+            this.PartDropdown.value--;
+            this.PartDropdown.RefreshShownValue();
+        }
+        else
+        {
+            GameManager.Instance.Chapter_Previous();
+        }
+    }
+
+    private void OnActive_Changed()
+    {
+        Navigation_Update();
+    }
+
+    private void Navigation_Update()
+    {
+        if (this.ChapterDropdown.value == 0 && this.PartDropdown.value == 0)
+        {
+            this.BackButton.SetActive(false);
+        }
+        else
+        {
+            this.BackButton.SetActive(true);
+        }
+
+        if (this.ChapterDropdown.value == this.ChapterDropdown.options.Count - 1 &&
+            this.PartDropdown.value == this.PartDropdown.options.Count - 1)
+        {
+            this.NextButton.SetActive(false);
+        }
+        else
+        {
+            this.NextButton.SetActive(true);
+        }
     }
 }
