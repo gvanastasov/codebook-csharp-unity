@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using UnityEditor;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -81,6 +84,7 @@ public class GameManager : MonoBehaviour
 
     private void Chapter_ActivatePart(GameObject chapter, int partIndex)
     {
+        this.ClearConsole();
         this.Chapter_DeactivateParts(chapter);
         chapter.transform.GetChild(partIndex).gameObject.SetActive(true);
     }
@@ -151,6 +155,14 @@ public class GameManager : MonoBehaviour
     private string ExtractName(string name)
     {
         return Regex.Replace(name, NAME_PATTERN, NAME_FORMAT);
+    }
+
+    private void ClearConsole()
+    {
+        Assembly assembly = Assembly.GetAssembly(typeof(SceneView));
+        Type logEntries = assembly.GetType("UnityEditor.LogEntries");
+        MethodInfo clearConsoleMethod = logEntries.GetMethod("Clear");
+        clearConsoleMethod.Invoke(new object(), null);
     }
 #endregion
 }
