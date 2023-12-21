@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
 
         GUIManager.Instance.ChapterDropdown.onValueChanged.AddListener(
             delegate { OnChapterDropdown_Changed(GUIManager.Instance.ChapterDropdown.value); });
+        GUIManager.Instance.PartDropdown.onValueChanged.AddListener(
+            delegate { OnPartDropdown_Changed(GUIManager.Instance.PartDropdown.value); });
     }
 
     private void OnChapterDropdown_Changed(int idx)
@@ -46,6 +48,11 @@ public class GameManager : MonoBehaviour
         this.Chapter_DeactivateCurrent();
         this.Chapter_Activate(idx);
         GUIManager.Instance.SetPartOptions(FindPartNames(this.chapterCurrent));
+    }
+
+    private void OnPartDropdown_Changed(int idx)
+    {
+        this.Chapter_ActivatePart(this.chapterCurrent, idx);
     }
 
     private void Chapter_DeactivateAll()
@@ -60,6 +67,7 @@ public class GameManager : MonoBehaviour
     private void Chapter_Activate(int chapterIndex)
     {
         this.chapterCurrent = this.chapters[chapterIndex];
+        this.Chapter_ActivatePart(this.chapterCurrent, 0);
         this.chapterCurrent.SetActive(true);
     }
 
@@ -71,6 +79,20 @@ public class GameManager : MonoBehaviour
     private void Chapter_DeactivateCurrent()
     {
         this.Chapter_Deactivate(this.chapterCurrent);
+    }
+
+    private void Chapter_DeactivateParts(GameObject chapter)
+    {
+        foreach (Transform child in chapter.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+    }
+
+    private void Chapter_ActivatePart(GameObject chapter, int partIndex)
+    {
+        this.Chapter_DeactivateParts(chapter);
+        chapter.transform.GetChild(partIndex).gameObject.SetActive(true);
     }
 
 #region Helpers
