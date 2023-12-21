@@ -74,14 +74,7 @@ public class ChapterManager : EditorWindow
         GUI.enabled = isChapterSelected;
         if (GUILayout.Button("Remove Chapter"))
         {
-            var parent = GameObject.Find("chapters").transform;
-            if (parent == null)
-            {
-                Debug.LogError("Could not find chapters parent object.");
-                return;
-            }
-            Undo.DestroyObjectImmediate(selectedObject);
-            ReindexChapters(parent);
+            RemoveChapter(selectedObject);
         }
 
         DrawUILine(Color.gray, 1, 10);
@@ -108,6 +101,22 @@ public class ChapterManager : EditorWindow
         GUILayout.EndArea();
 
         Handles.EndGUI();
+    }
+
+    /// <summary>
+    /// Removes the selected chapter from the parent object.
+    /// </summary>
+    /// <param name="selectedObject"></param>
+    private static void RemoveChapter(GameObject selectedObject)
+    {
+        var parent = GameObject.Find("chapters").transform;
+        if (parent == null)
+        {
+            Debug.LogError("Could not find chapters parent object.");
+            return;
+        }
+        Undo.DestroyObjectImmediate(selectedObject);
+        ReindexChapters(parent);
     }
 
     /// <summary>
