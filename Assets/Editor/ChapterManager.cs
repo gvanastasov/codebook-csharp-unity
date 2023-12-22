@@ -111,7 +111,29 @@ public class ChapterManager : EditorWindow
     /// <param name="selectedChapter"></param>
     private static void CreatePart(GameObject selectedChapter)
     {
+        var textObject = new GameObject("Text", new Type[] { typeof(MeshRenderer), typeof(TextMesh) });
+        textObject.transform.position = new Vector3(0, 1, 0);
+        textObject.transform.localScale = new Vector3(0.15f, 0.15f, 1f);
+        var textMesh = textObject.GetComponent<TextMesh>();
+        textMesh.text = "New Part";
+        textMesh.anchor = TextAnchor.MiddleCenter;
+        textMesh.alignment = TextAlignment.Center;
+        var textRenderer = textObject.GetComponent<MeshRenderer>();
+        textRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        textRenderer.receiveShadows = false;
+
+        var platformObject = new GameObject("Platform", new Type[] { typeof(MeshFilter), typeof(MeshRenderer), typeof(BoxCollider) });
+        platformObject.transform.position = new Vector3(0, 0, 0);
+        platformObject.transform.localScale = new Vector3(4f, 0.1f, 4f);
+        var platformMesh = platformObject.GetComponent<MeshFilter>();
+        platformMesh.mesh = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
+        var platformRenderer = platformObject.GetComponent<MeshRenderer>();
+        platformRenderer.materials = new Material[] { AssetDatabase.GetBuiltinExtraResource<Material>("Default-Material.mat") };
+
         var newPart = new GameObject($"part_00 - {newPartName}");
+        textObject.transform.SetParent(newPart.transform);
+        platformObject.transform.SetParent(newPart.transform);
+
         Undo.RegisterCreatedObjectUndo(newPart, "Create Part");
 
         // todo: for now always at the end.
