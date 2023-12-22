@@ -78,6 +78,17 @@ public class ChapterManager : EditorWindow
             DeleteChapter(selectedObject);
         }
 
+        GUI.enabled = true;
+        if (GUILayout.Button("Reindex Chapters"))
+        {
+            var root = GameObject.Find("chapters").transform;
+            Reindex(root);
+            foreach (Transform chapter in root)
+            {
+                Reindex(chapter, "part");
+            }
+        }
+
         GUIHelpers.DrawUILine(Color.gray, 1, 10);
         
         GUI.enabled = isChapterSelected || isPartSelected;
