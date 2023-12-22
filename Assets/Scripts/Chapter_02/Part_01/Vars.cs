@@ -21,6 +21,8 @@ public class Vars : MonoBehaviour
         // This is a local variable.
         // This is a method scope variable.
         // This is not serialized and can not be set in the inspector.
+        // Because we don't really use this anywhere, but alocated space for it, both your IDE and 
+        // Unity will warn you about it - don't waste your computer's memory!
         int localSecret = 42;
     }
 }
