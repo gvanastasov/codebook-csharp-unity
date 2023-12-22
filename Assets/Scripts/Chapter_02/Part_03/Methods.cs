@@ -20,8 +20,40 @@ public class Methods : MonoBehaviour
 
     private void MyPrivateMethod()
     {
-        // This is a method. It is a block of code that does something.
-        // You can call this method from anywhere in this class.
+        // This is a METHOD. It is a block of code that DOES something.
+        // You can CALL this method from anywhere in this class.
         Debug.Log("MyPrivateMethod() called!");
+    }
+
+    private int MyPrivateMethodWithReturn()
+    {
+        // This method has a return TYPE and it returns an integer VALUE.
+        return 42;
+    }
+
+    private void MyPrivateVoid()
+    {
+        // This method has a return TYPE and it returns NOTHING (aka void).
+        Debug.Log("Silence is golden.");
+    }
+
+    private int Sum(int a, int b)
+    {
+        // This method has PARAMETERS. Parameters are variables that you pass to the method.
+        // This method has TWO parameters, both of type integer.
+        return a + b;
+    }
+
+    private int MySum(int a, int b)
+    {
+        // The a and b variables are PARAMETERS of this method.
+        // But they are also passed to the Sum() method as ARGUMENTS.
+        return this.Sum(a, b);
+    }
+
+    public void MyPublicMethod()
+    {
+        // This is a PUBLIC (scope) method. It can be called from anywhere in the project (almost).
+        Debug.Log("MyPublicMethod() called!");
     }
 }
