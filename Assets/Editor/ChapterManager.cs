@@ -197,11 +197,11 @@ public class ChapterManager : EditorWindow
     /// <param name="child"></param>
     private static void SetNameByIdx(int idx, Transform child, string prefix = "chapter")
     {
-        var nameParts = child.name.Split('-');
+        var nameParts = child.name.Split('-', StringSplitOptions.RemoveEmptyEntries);
 
         var formattedIndex = idx < 9 ? "0" + (idx + 1).ToString() : (idx + 1).ToString();
         nameParts[0] = prefix + "_" + formattedIndex;
 
-        child.name = string.Join("-", nameParts);
+        child.name = string.Join(" - ", nameParts);
     }
 }
