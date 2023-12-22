@@ -17,7 +17,9 @@ public class Operations : MonoBehaviour
         Debug.Log("Sum: " + (A + B));
         Debug.Log("Subtract: " + (A - B));
         Debug.Log("Multiply: " + (A * B));
-        Debug.Log("Divide: " + (A / B));
-        Debug.Log("Concatinate: " + firstName + " " + lastName);
+        Debug.Log("Divide: (whole numbers) " + (A / B));
+        Debug.Log("Divide: (decimal numbers) " + (A / (float)B));
+        Debug.Log("Concatinate: (numbers) " + A + B);
+        Debug.Log("Concatinate: (strings)" + firstName + " " + lastName);
     }
 }
