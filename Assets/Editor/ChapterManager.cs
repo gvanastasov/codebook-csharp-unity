@@ -57,7 +57,7 @@ public class ChapterManager : EditorWindow
     {
         Handles.BeginGUI();
 
-        GUILayout.BeginArea(new Rect(Screen.width - 210, Screen.height - 200, 200, 200));
+        GUILayout.BeginArea(new Rect(Screen.width - 210, Screen.height - 220, 200, 230));
         GUILayout.BeginVertical("box");
 
         GUILayout.Label("Chapter Manager");
@@ -235,6 +235,6 @@ public class ChapterManager : EditorWindow
         var formattedIndex = idx < 9 ? "0" + (idx + 1).ToString() : (idx + 1).ToString();
         nameParts[0] = prefix + "_" + formattedIndex;
 
-        child.name = string.Join(" - ", nameParts);
+        child.name = nameParts[0].Trim() + " - " + nameParts[1].Trim();
     }
 }
