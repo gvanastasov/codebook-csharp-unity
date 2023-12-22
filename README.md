@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to the Unity CSharp Playbook! This project is a hands-on guide designed to help beginners explore C# programming within the Unity engine. It's not a standalone game, but an interactive playbook that provides a practical, engaging way to learn C# and Unity - directly inside Unity Editor itself.
+Welcome to the Unity CSharp Playbook! This project is a hands-on guide designed to help beginners explore C# programming within the Unity engine. It's not a standalone game, but an interactive playbook that provides a practical, engaging way to learn C# and Unity - directly inside Unity Editor itself. Expect to have interaction with console, code and inspector. A good idea is to navigate a bit around Unity before starting this up (aka at least know that Unity is game engine, click around read intro from their website - I might add an interactive guide around the editor since i believe we have interface to tap into the rendering of different windows).
 
 The project uses a single scene, with a GameManager to navigate between different chapters and their subdivisions, referred to as chapter parts. A helpful editor is included in the SceneView to assist with managing CRUD operations. Why single scene? Why not :)
 
