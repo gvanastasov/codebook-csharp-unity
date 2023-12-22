@@ -142,6 +142,7 @@ public class ChapterManager : EditorWindow
         platformRenderer.materials = new Material[] { AssetDatabase.GetBuiltinExtraResource<Material>("Default-Material.mat") };
 
         var newPart = new GameObject($"part_00 - {newPartName}");
+        newPart.tag = "Part";
         textObject.transform.SetParent(newPart.transform);
         platformObject.transform.SetParent(newPart.transform);
 
@@ -198,6 +199,7 @@ public class ChapterManager : EditorWindow
         }
 
         var newChapter = new GameObject($"chapter_00 - {newChapterName}");
+        newChapter.tag = "Chapter";
         Undo.RegisterCreatedObjectUndo(newChapter, "Create Chapter");
 
         var idx = isChapterSelected
