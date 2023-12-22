@@ -31,6 +31,7 @@ public class Conditions : MonoBehaviour
         {
             return "This also is not a digit!";
         }
+        // If no condition is true, the code in the ELSE block is executed.
         else
         {
             // We can also have nested conditions.
