@@ -30,13 +30,12 @@ public class GameManager : MonoBehaviour
             DestroyImmediate(gameObject);
         }
 
+        var progress = LoadProgress();
+        
         this.chapters = this.FindChapters();
-        this.Chapter_DeactivateAll();
-        this.Chapter_Activate(0);
-    }
+        this.Chapter_Activate(progress[0]);
+        this.Chapter_ActivatePart(this.chapterCurrent, progress[1]);
 
-    private void Start()
-    {
         GUIManager.Instance.SetChapterOptions(FindChapterNames());
         GUIManager.Instance.SetPartOptions(FindPartNames(this.chapterCurrent));
 
@@ -44,17 +43,52 @@ public class GameManager : MonoBehaviour
             delegate { OnChapterDropdown_Changed(GUIManager.Instance.ChapterDropdown.value); });
         GUIManager.Instance.PartDropdown.onValueChanged.AddListener(
             delegate { OnPartDropdown_Changed(GUIManager.Instance.PartDropdown.value); });
+
+        GUIManager.Instance.ChapterDropdown.value = progress[0];
+        GUIManager.Instance.PartDropdown.value = progress[1];
+    }
+
+    private static int[] LoadProgress()
+    {
+        var savedChapter = EditorPrefs.GetString("ChapterManager.CurrentChapter");
+        if (string.IsNullOrEmpty(savedChapter))
+        {
+            savedChapter = "c01p01";
+        }
+
+        string pattern = @"c(\d+)p(\d+)";
+        Match match = Regex.Match(savedChapter, pattern);
+
+        if (match.Success)
+        {
+            int chapter = int.Parse(match.Groups[1].Value);
+            int part = int.Parse(match.Groups[2].Value);
+
+            return new int[] { chapter, part };
+        }
+
+        return new int[] { 0, 0 };
+    }
+
+    private static void SaveProgress(int chapter, int part)
+    {
+        EditorPrefs.SetString("ChapterManager.CurrentChapter", $"c{chapter:D2}p{part:D2}");
     }
 
     private void OnChapterDropdown_Changed(int idx)
     {
         this.Chapter_Activate(idx);
+        this.Chapter_ActivatePart(this.chapterCurrent, 0);
         GUIManager.Instance.SetPartOptions(FindPartNames(this.chapterCurrent));
+
+        SaveProgress(idx, 0);
     }
 
     private void OnPartDropdown_Changed(int idx)
     {
         this.Chapter_ActivatePart(this.chapterCurrent, idx);
+
+        SaveProgress(GUIManager.Instance.ChapterDropdown.value, idx);
     }
 
     private void Chapter_DeactivateAll()
@@ -70,7 +104,6 @@ public class GameManager : MonoBehaviour
     {
         this.Chapter_DeactivateAll();
         this.chapterCurrent = this.chapters[chapterIndex];
-        this.Chapter_ActivatePart(this.chapterCurrent, 0);
         this.chapterCurrent.SetActive(true);
     }
 
