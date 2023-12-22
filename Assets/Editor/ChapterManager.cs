@@ -123,7 +123,7 @@ public class ChapterManager : EditorWindow
     private static void CreatePart(GameObject selectedChapter)
     {
         var textObject = new GameObject("Text", new Type[] { typeof(MeshRenderer), typeof(TextMesh) });
-        textObject.transform.position = new Vector3(0, 1, 0);
+        textObject.transform.position = new Vector3(0, 3.5f, 0);
         textObject.transform.localScale = new Vector3(0.15f, 0.15f, 1f);
         var textMesh = textObject.GetComponent<TextMesh>();
         textMesh.text = "New Part";
