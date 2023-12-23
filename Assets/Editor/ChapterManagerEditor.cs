@@ -122,17 +122,6 @@ public class ChapterManager : EditorWindow
     /// <param name="selectedChapter"></param>
     private static void CreatePart(GameObject selectedChapter)
     {
-        var textObject = new GameObject("Text", new Type[] { typeof(MeshRenderer), typeof(TextMesh) });
-        textObject.transform.position = new Vector3(0, 3.5f, 0);
-        textObject.transform.localScale = new Vector3(0.15f, 0.15f, 1f);
-        var textMesh = textObject.GetComponent<TextMesh>();
-        textMesh.text = "New Part";
-        textMesh.anchor = TextAnchor.MiddleCenter;
-        textMesh.alignment = TextAlignment.Center;
-        var textRenderer = textObject.GetComponent<MeshRenderer>();
-        textRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        textRenderer.receiveShadows = false;
-
         var platformObject = new GameObject("Platform", new Type[] { typeof(MeshFilter), typeof(MeshRenderer), typeof(BoxCollider) });
         platformObject.transform.position = new Vector3(0, 0, 0);
         platformObject.transform.localScale = new Vector3(4f, 0.1f, 4f);
@@ -141,15 +130,15 @@ public class ChapterManager : EditorWindow
         var platformRenderer = platformObject.GetComponent<MeshRenderer>();
         platformRenderer.materials = new Material[] { AssetDatabase.GetBuiltinExtraResource<Material>("Default-Material.mat") };
 
-        var newPart = new GameObject($"part_00 - {newPartName}");
+        var newPart = new GameObject($"part_00 - {newPartName}", new Type[] { typeof(Part) });
         newPart.tag = "Part";
-        textObject.transform.SetParent(newPart.transform);
         platformObject.transform.SetParent(newPart.transform);
 
         Undo.RegisterCreatedObjectUndo(newPart, "Create Part");
 
         // todo: for now always at the end.
         newPart.transform.SetParent(selectedChapter.transform);
+        selectedChapter.GetComponent<Chapter>().Parts.Add(newPart.GetComponent<Part>());
         Reindex(selectedChapter.transform, "part");
     }
 
@@ -165,6 +154,7 @@ public class ChapterManager : EditorWindow
             Debug.LogError("Could not find part chapter parent.");
             return;
         }
+        parent.GetComponent<Chapter>().Parts.Remove(selectedPart.GetComponent<Part>());
         Undo.DestroyObjectImmediate(selectedPart);
         Reindex(parent, "part");
     }
@@ -198,7 +188,7 @@ public class ChapterManager : EditorWindow
             return;
         }
 
-        var newChapter = new GameObject($"chapter_00 - {newChapterName}");
+        var newChapter = new GameObject($"chapter_00 - {newChapterName}", new Type[] { typeof(MeshFilter), typeof(Chapter) });
         newChapter.tag = "Chapter";
         Undo.RegisterCreatedObjectUndo(newChapter, "Create Chapter");
 
@@ -238,5 +228,14 @@ public class ChapterManager : EditorWindow
         nameParts[0] = prefix + "_" + formattedIndex;
 
         child.name = nameParts[0].Trim() + " - " + nameParts[1].Trim();
+
+        if (prefix == "chapter")
+        {
+            child.GetComponent<Chapter>().Title = formattedIndex + " - " + nameParts[1].Trim();
+        }
+        else if (prefix == "part")
+        {
+            child.GetComponent<Part>().Title = formattedIndex + " - " + nameParts[1].Trim();
+        }
     }
 }
