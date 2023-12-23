@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
 using UnityEngine;
 
 public class Lists : MonoBehaviour
@@ -11,6 +9,8 @@ public class Lists : MonoBehaviour
     // We can add/remove/shift/etc. elements to it at runtime.
     public List<GameObject> cubes;
     
+    public TextMesh Counter;
+
     public void Start()
     {
         // This is how you copy one list into another.
@@ -47,17 +47,10 @@ public class Lists : MonoBehaviour
         // This is how you remove all elements from a list.
         cubes.Clear();
 
-        // Magic happens here - we restore the original state of the list.
-        // Well technically some other stuff happens, but we will get to that some other time.
-        //      cubes = cache;
-        // or
-        //      cubes = new List<GameObject>(cache);
-        /// Both of the above are valid, but not in Unity's world. Unity does not like it when you change the reference
-        /// of a serialized field (like the 'cubes' field). So we have to do it the hard way.
-        foreach (var cube in cache)
-        {
-            cubes.Add(cube);
-        }
+        // Restore the original state of the list.
+        cubes = new List<GameObject>(cache);
+
+        Counter.text = $"Cubes: {cubes.Count}";
     }
 
     // Special Unity function that is called when you are hovering an object (and some other conditions, but more later).
@@ -66,12 +59,31 @@ public class Lists : MonoBehaviour
         // Left moust button clicked.
         if(Input.GetMouseButtonDown(0))
         {
-            AddCube();
+            if (cubes.Count > 10)
+            {
+                Debug.Log("c04p02 :: There are too many cubes.");
+                return;
+            }
+            else
+            {
+                AddCube();
+                Counter.text = $"Cubes: {cubes.Count}";
+            }
         }
         // Right moust button clicked.
         else if(Input.GetMouseButtonDown(1))
         {
-            RemoveLastCube();
+            // Just some random logic I invented to keep the original cube.
+            if (cubes.Count > 1)
+            {
+                RemoveLastCube();
+            }
+            else 
+            {
+                Debug.Log("c04p02 :: There are no cubes to remove. Well theres the Original Cube. Can't touch this.");
+            }
+
+            Counter.text = $"Cubes: {cubes.Count}";
         };
     }
 
