@@ -13,6 +13,8 @@ public class GUIManager : MonoBehaviour
 
     public TMP_Dropdown PartDropdown;
 
+    public TMP_Text PartDescription;
+
     public GameObject BackButton;
 
     public GameObject NextButton;
