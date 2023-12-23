@@ -40,12 +40,8 @@ public class GUIManager : MonoBehaviour
         {
             DestroyImmediate(gameObject);
         }
-    }
 
-    private void Start()
-    {
-        this.ChapterDropdown.onValueChanged.AddListener(delegate { OnActive_Changed(); });
-        this.PartDropdown.onValueChanged.AddListener(delegate { OnActive_Changed(); });
+        this.PartDescription.gameObject.SetActive(false);
     }
 
     public void SetChapterOptions(List<string> options)
@@ -53,8 +49,6 @@ public class GUIManager : MonoBehaviour
         this.ChapterDropdown.ClearOptions();
         this.ChapterDropdown.AddOptions(options);
         this.ChapterDropdown.RefreshShownValue();
-
-        Navigation_Update();
     }
 
     public void SetPartOptions(List<string> options)
@@ -74,8 +68,6 @@ public class GUIManager : MonoBehaviour
 
         this.PartDropdown.RefreshShownValue();
         this.PartDropdown.value = 0;
-
-        Navigation_Update();
     }
 
     public void SetNextPart()
@@ -104,12 +96,15 @@ public class GUIManager : MonoBehaviour
         }
     }
 
-    private void OnActive_Changed()
+    public void SetDescription(string description)
     {
-        Navigation_Update();
+        var hasDescription = !string.IsNullOrEmpty(description);
+
+        this.PartDescription.gameObject.SetActive(hasDescription);
+        this.PartDescription.text = description;
     }
 
-    private void Navigation_Update()
+    public void SetNavigation()
     {
         if (this.ChapterDropdown.value == 0 && this.PartDropdown.value == 0)
         {
