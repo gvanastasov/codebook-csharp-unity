@@ -32,7 +32,7 @@ public class Arrays : MonoBehaviour
     // Feeling adventurous?
     void Matrix()
     {
-        // This is a 2D array of intergers.
+        // This is a 2D array of intergers, also known as multidimensional array.
         // It has a fixed size of 3x3 elements.
         int[,] Matrix = new int[3, 3] {
             { 1, 2, 3 },
