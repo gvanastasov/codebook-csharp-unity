@@ -43,28 +43,28 @@ public class GameManager : MonoBehaviour
             delegate { OnPartDropdown_Changed(GUIManager.Instance.PartDropdown.value); });
     }
 
-    private void OnChapterDropdown_Changed(int idx)
+    private void OnChapterDropdown_Changed(int chapterIdx)
     {
-        ChapterManager.Instance.Activate(idx, 0);
+        ChapterManager.Instance.Activate(chapterIdx, 0);
 
         GUIManager.Instance.SetPartOptions(
             ChapterManager.Instance.GetCurrentPartsNames());
         GUIManager.Instance.SetNavigation();
 
-        ChapterManager.SaveProgress(idx, 0);
+        ChapterManager.SaveProgress(chapterIdx, 0);
         ClearConsole();
     }
 
-    private void OnPartDropdown_Changed(int idx)
+    private void OnPartDropdown_Changed(int partIdx)
     {
         ChapterManager.Instance.Activate(
-            GUIManager.Instance.ChapterDropdown.value, idx);
+            GUIManager.Instance.ChapterDropdown.value, partIdx);
 
         GUIManager.Instance.SetDescription(
             ChapterManager.Instance.PartCurrent.Description);
 
         ChapterManager.SaveProgress(
-            GUIManager.Instance.ChapterDropdown.value, idx);
+            GUIManager.Instance.ChapterDropdown.value, partIdx);
         ClearConsole();
     }
 
