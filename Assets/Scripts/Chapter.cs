@@ -5,5 +5,5 @@ public class Chapter : MonoBehaviour
 {
     public string Title;
 
-    public List<Part> Parts;
+    public List<Part> Parts = new List<Part>();
 }
