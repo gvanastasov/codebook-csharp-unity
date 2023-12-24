@@ -72,14 +72,31 @@ public class InstancesCharacter : MonoBehaviour
         var enemy2 = (enemyCharacter as Enemy);
     }
 
+    // This is a nested class definition.
+    private class Weapon
+    {
+        private string name;
+
+        public Weapon(string name)
+        {
+            this.name = name;
+        }
+
+        public string Name
+        {
+            get { return name; }
+        }
+    }
+
     // This is yet another nested class definition.
     // This is yet another inherited class definition.
     // This class inherits from 
     private class Enemy : Character
     {
-        string weapon;
+        // Class composition is a way to create a class that contains other classes.
+        Weapon weapon;
 
-        public Enemy(string name, Vector4 color, string weapon)
+        public Enemy(string name, Vector4 color, Weapon weapon)
             : base(name, color)
         {
             this.weapon = weapon;
