@@ -56,7 +56,7 @@ public class InstancesCharacter : MonoBehaviour
         Debug.Log($"c05p01 :: Instances :: This is an instance of the {nameof(Character)} class, and the name is {character2.Name}");
 
         // This is an instance of the Enemy class.
-        var enemy = new Enemy(name: "Enemy", weapon: "Sword");
+        var enemy = new Enemy(name: "Enemy", weapon: new Weapon("Sword"));
         Debug.Log($"c05p01 :: Instances :: This is an instance of the {nameof(Enemy)} class, and the name is {enemy.Name} and the weapon is {enemy.Weapon}");
 
         // This is also an instance of the Character class, because the Enemy class inherits from the it.
@@ -102,12 +102,12 @@ public class InstancesCharacter : MonoBehaviour
             this.weapon = weapon;
         }
 
-        public Enemy(string name, string weapon)
+        public Enemy(string name, Weapon weapon)
             : this(name, new Vector4(1, 0, 0, 1), weapon)
         {
         }
 
-        public string Weapon
+        public Weapon Weapon
         {
             get { return weapon; }
         }
@@ -120,7 +120,7 @@ public class InstancesCharacter : MonoBehaviour
     {
         public static Enemy CreateEnemy(string name, string weapon)
         {
-            return new Enemy(name, weapon);
+            return new Enemy(name, new Weapon(weapon));
         }
     }
 
