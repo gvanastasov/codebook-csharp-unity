@@ -50,6 +50,8 @@ public class GameManager : MonoBehaviour
         GUIManager.Instance.SetPartOptions(
             ChapterManager.Instance.GetCurrentPartsNames());
         GUIManager.Instance.SetNavigation();
+        GUIManager.Instance.SetDescription(
+            ChapterManager.Instance.PartCurrent.Description);
 
         ChapterManager.SaveProgress(chapterIdx, 0);
         ClearConsole();

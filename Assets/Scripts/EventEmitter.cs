@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EventEmitter : MonoBehaviour
 {
+    public UnityEvent OnCollisionEnter_Event;
+
     public delegate void OnMouseDown_Event(EventEmitter emitter);
     public event OnMouseDown_Event OnMouseDown_EventTriggered;
     public string OnMouseDown_EventData = string.Empty;
@@ -12,5 +15,10 @@ public class EventEmitter : MonoBehaviour
         {
             OnMouseDown_EventTriggered(emitter: this);
         }
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        OnCollisionEnter_Event.Invoke();
     }
 }
