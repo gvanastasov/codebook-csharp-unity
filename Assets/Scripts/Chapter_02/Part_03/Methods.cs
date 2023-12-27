@@ -1,7 +1,14 @@
+using System.Collections;
 using UnityEngine;
 
 public class Methods : MonoBehaviour
 {
+    public int delay = 2;
+
+    public GameObject cube;
+
+    public TextMesh text;
+
     // Unity reserved method name.
     // Start is called before the first frame update, aka when you hit PLAY button.
     void Start()
@@ -16,6 +23,12 @@ public class Methods : MonoBehaviour
         // Notice the keyword "this" before the method name. Signals that this method belongs to this class,
         // and only instances of this class can call this method.
         this.MyPrivateMethod();
+
+        if (this.cube != null)
+        {
+            this.text.text = "Cube: " + (this.cube.transform.position.x < 0 ? "Left" : "Right");
+            this.StartCoroutine(this.TeleportCube());
+        }
     }
 
     private void MyPrivateMethod()
@@ -55,5 +68,19 @@ public class Methods : MonoBehaviour
     {
         // This is a PUBLIC (scope) method. It can be called from anywhere in the project (almost).
         Debug.Log("MyPublicMethod() called!");
+    }
+
+    // This is a special one (coroutine). Ignore for now.
+    private IEnumerator TeleportCube()
+    {
+        yield return new WaitForSeconds(this.delay);
+        this.cube.transform.position = new Vector3(
+            this.cube.transform.position.x * -1, 
+            this.cube.transform.position.y, 
+            this.cube.transform.position.y);
+
+        this.text.text = "Cube: " + (this.cube.transform.position.x < 0 ? "Left" : "Right");
+        
+        yield return this.TeleportCube();
     }
 }
