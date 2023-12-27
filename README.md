@@ -14,7 +14,7 @@ The project uses a single scene, with a GameManager to navigate between differen
 
 ### Installation
 
-1. Clone the repo: `git clone https://https://github.com/gvanastasov/codebook-csharp-unity.git`
+1. Clone the repo: `git clone https://github.com/gvanastasov/UnityCSharpPlaybook.git`
 2. Open the project in Unity.
 3. Run the game in editor mode.
 
@@ -29,31 +29,57 @@ The project uses a single scene, with a GameManager to navigate between differen
 ## Content
 
 1. Unity C#
+
     1.1 Intro
+
 2. Members
+
     2.1 Variables
+
     2.2 Operations
+    
     2.3 Methods
+
 3. Control Flow
+
     3.1 if
+
     3.2 Switch
+
 4. Collections
+
     4.1 Arrays
+
     4.2 Lists
+
     4.3 Dictionaries
+
     4.4 Loops
+
 5. Objects
+
     5.1 Classes
+
     5.2 Structs
+
     5.3 Instances
+
 6. Unity Model
+
     6.1 Object
+
     6.2 Component
+
     6.3 Behaviour
+
     6.4 MonoBehaviour
+
     6.5 GameObject
+
     6.6 Extended Behaviour
+
 7. Unity C#
+
     7.1 The End
 
 ## Contributing
