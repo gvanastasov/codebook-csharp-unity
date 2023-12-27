@@ -32,10 +32,33 @@ The project uses a single scene, with a GameManager to navigate between differen
     1.1 Intro
 2. Members
     2.1 Variables
+    2.2 Operations
+    2.3 Methods
+3. Control Flow
+    3.1 if
+    3.2 Switch
+4. Collections
+    4.1 Arrays
+    4.2 Lists
+    4.3 Dictionaries
+    4.4 Loops
+5. Objects
+    5.1 Classes
+    5.2 Structs
+    5.3 Instances
+6. Unity Model
+    6.1 Object
+    6.2 Component
+    6.3 Behaviour
+    6.4 MonoBehaviour
+    6.5 GameObject
+    6.6 Extended Behaviour
+7. Unity C#
+    7.1 The End
 
 ## Contributing
 
-We welcome contributions from the community. If you'd like to contribute, please fork the repository and make changes as you'd like. Pull requests are warmly welcome.
+We welcome contributions from the community. If you'd like to contribute, please fork the repository and make changes as you'd like. Pull requests are warmly welcome, especially if something seems off, or completely missing it out.
 
 ## License
 
