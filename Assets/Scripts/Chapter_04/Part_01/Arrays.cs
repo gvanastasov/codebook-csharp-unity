@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Arrays : MonoBehaviour
@@ -20,13 +22,31 @@ public class Arrays : MonoBehaviour
         Numbers[0] = 2;
         Numbers[1] = 20;
         Numbers[2] = 84;
+
+        GenerateCubes();
     }
 
-    void OnMouseDown()
+    // This is just a helper method to generate cubes in the scene, array alike.
+    private void GenerateCubes()
     {
-        // Lets get a random number between 0 and the length of our Array.
-        var randomIndex = Random.Range(0, Numbers.Length);
-        Debug.Log($"c04p01 :: Arrays :: OnMouseDown() - random number at index {randomIndex} has value {Numbers[randomIndex]}");
+        for (int i = 0; i < Numbers.Length; i++)
+        {
+            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.parent = this.transform;
+            cube.transform.position = new Vector3(-1f + i * 1, 0.5f, 0);
+            cube.transform.localScale = new Vector3(0.5f, 0.5f, 0.25f);
+            cube
+                .GetComponent<MeshRenderer>()
+                .SetMaterials(new List<Material> { Resources.Load<Material>("Materials/m_Green") });
+
+            var text = new GameObject("Text", new Type[] { typeof(MeshRenderer), typeof(TextMesh) });
+            text.GetComponent<TextMesh>().text = $"idx: {i}\nval: {Numbers[i]}";
+            text.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
+            text.GetComponent<TextMesh>().alignment = TextAlignment.Center;
+            text.transform.parent = cube.transform;
+            text.transform.localScale = new Vector3(0.2f, 0.2f, 1);
+            text.transform.localPosition = new Vector3(0, 0, 0);
+        }
     }
 
     // Feeling adventurous?
