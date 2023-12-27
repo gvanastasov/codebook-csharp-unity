@@ -14,7 +14,7 @@ The project uses a single scene, with a GameManager to navigate between differen
 
 ### Installation
 
-1. Clone the repo: `git clone https://github.com/gvanastasov/UnityCSharpPlaybook.git`
+1. Clone the repo: `git clone https://https://github.com/gvanastasov/codebook-csharp-unity.git`
 2. Open the project in Unity.
 3. Run the game in editor mode.
 
